@@ -44,10 +44,10 @@ export default function Home() {
 
           <div className="mx-auto pt-20">
             <Image
-              src={"/hero.png"}
+              src={"/hero1.png"}
               alt="Banner"
-              width={1250}
-              height={700}
+              width={1000}
+              height={500}
               className="rounded-lg border-4 border-green-700 shadow-xl"
             ></Image>
           </div>
