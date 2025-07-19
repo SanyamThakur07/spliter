@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, ArrowRight, Ghost } from "lucide-react";
+import { ArrowRight, Ghost } from "lucide-react";
 import { FEATURES, STEPS, TESTIMONIALS } from "@/lib/landing";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
@@ -46,7 +46,7 @@ export default function Home() {
             <Image
               src={"/hero1.png"}
               alt="Banner"
-              width={1000}
+              width={1200}
               height={500}
               className="rounded-lg border-4 border-green-700 shadow-xl"
             ></Image>
@@ -172,7 +172,7 @@ export default function Home() {
           <Button
             asChild
             variant={"ghost"}
-            className="bg-green-800 text-green-100"
+            className="bg-green-800 text-green-100 hover:opacity-90"
           >
             <a href="/dashboard">
               Get Started

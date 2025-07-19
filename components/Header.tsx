@@ -21,7 +21,7 @@ export function Header() {
   return (
     <div>
       <header className="fixed top-0 border-b bg-white/85 backdrop-blur-md w-full z-50 ">
-        <nav className="flex items-center justify-between mx-auto px-4">
+        <nav className="flex items-center justify-between mx-auto px-5">
           <a href="/">
             <img
               src={"/logos/logo.png"}

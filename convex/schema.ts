@@ -19,12 +19,12 @@ export default defineSchema({
         amount: v.number(),
         category: v.optional(v.string()),
         date: v.number(),
-        paidByUserId: v.id("uesrs"),
+        paidByUserId: v.id("users"),
         splitType: v.string(),
         splits: v.array(
             v.object({
                 userId: v.id("users"),
-                amound: v.number(),
+                amount: v.number(),
                 paid: v.boolean(),
             })
         ),
@@ -39,10 +39,10 @@ export default defineSchema({
         amount: v.number(),
         note: v.optional(v.string()),
         date: v.number(),
-        paidByUserId: v.id("user"),
-        receivedByUserId: v.id("user"),
+        paidByUserId: v.id("users"),
+        receivedByUserId: v.id("users"),
         groupId: v.optional(v.id("groups")),
-        relatedExpensesIds: v.optional(v.array(v.id("expenses"))),
+        relatedExpenseIds: v.optional(v.array(v.id("expenses"))),
         createdBy: v.id("users"),
     })
         .index("by_group", ["groupId"])
