@@ -1,4 +1,7 @@
+import { emitWarning } from "process";
+import { internal } from "./_generated/api";
 import { mutation, query } from "./_generated/server";
+import { v } from "convex/values";
 
 export const store = mutation({
   args: {},
@@ -54,5 +57,34 @@ export const getCurrentUser = query({
       throw new Error("User not found");
     }
     return user;
+  },
+});
+
+export const searchUsers = query({
+  args: { query: v.string() },
+
+  handler: async (ctx, args) => {
+    const currentUser: any = await ctx.runQuery((internal as any).user.getCurrentUser);
+
+    const nameResult = await ctx.db
+      .query("users")
+      .withSearchIndex("search_name", (q: any) => q.search("name", args.query))
+      .collect();
+
+    const emailResult = await ctx.db
+      .query("users")
+      .withSearchIndex("search_email", (q: any) => q.search("email", args.query))
+      .collect();
+
+    const users = [...nameResult, ...emailResult.filter((email) => !nameResult.some((name) => name._id === email._id))]
+
+    return users
+      .filter((user) => user._id !== currentUser._id)
+      .map((user) => ({
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        imageUrl: user.imageUrl,
+      }));
   },
 });

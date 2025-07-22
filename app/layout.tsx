@@ -26,7 +26,7 @@ export default function RootLayout({
         <ClerkProvider>
             <ConvexClientProvider>
               <Header />
-              <main className="min-h-screen pt-20">{children}</main>
+              <main className="pt-20">{children}</main>
             </ConvexClientProvider>
         </ClerkProvider>
       </body>

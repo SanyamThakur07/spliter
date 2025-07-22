@@ -3,14 +3,19 @@
 import { api } from "@/convex/_generated/api";
 import { useConvexQuery } from "@/hooks/use-convex-query";
 import { BarLoader } from "react-spinners";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, User, Users } from "lucide-react";
+import { Link, Plus, User, Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { useRouter } from "next/navigation";
+import CreateGroupModal from "./_component/create-group-modal";
 
 const ContactsPage = () => {
+  const [isCreateGroupModal, setisCreateGroupModal] = useState(false);
   const { data, isLoading } = useConvexQuery(api.contacts.getAllContacts);
+
+  const router = useRouter();
 
   if (isLoading) {
     return (
@@ -25,7 +30,7 @@ const ContactsPage = () => {
     <div className="container mx-auto py-6">
       <div className="flex items-center justify-between px-7 pt-10">
         <h1 className="gradient-title text-5xl font-bold">Contacts</h1>
-        <Button>
+        <Button onClick={() => setisCreateGroupModal(true)}>
           Create Group
           <Plus className="ml-1 h-4 w-4" />
         </Button>
@@ -45,21 +50,23 @@ const ContactsPage = () => {
           ) : (
             <div className="space-y-4">
               {users.map((user: any) => (
-                <Card className="py-8">
-                  <CardContent className="flex items-center gap-4">
-                    <Avatar>
-                      <AvatarImage
-                        src={user.imageUrl}
-                        className="h-10 w-10 rounded-full"
-                      />
-                      <AvatarFallback> {user.name.charAt(0)} </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-semibold">{user.name}</p>
-                      <p className="text-gray-500">{user.email}</p>
-                    </div>
-                  </CardContent>
-                </Card>
+                <div key={user.id}>
+                  <Card className="py-8">
+                    <CardContent className="flex items-center gap-4">
+                      <Avatar>
+                        <AvatarImage
+                          src={user.imageUrl}
+                          className="h-10 w-10 rounded-full"
+                        />
+                        <AvatarFallback> {user.name.charAt(0)} </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-semibold">{user.name}</p>
+                        <p className="text-gray-500">{user.email}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
               ))}
             </div>
           )}
@@ -80,25 +87,33 @@ const ContactsPage = () => {
             ) : (
               <div className="space-y-4">
                 {groups.map((group: any) => (
-                  <Card className="py-8">
-                    <CardContent className="flex items-center gap-4">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-200">
-                        <Users className="h-6 w-6" />
-                      </div>
-                      <div>
-                        <p className="font-semibold">{group.name}</p>
-                        <p className="text-gray-500">
-                          {group.memberCount} members
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <div key={group.id}>
+                    <Card className="py-8">
+                      <CardContent className="flex items-center gap-4">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-200">
+                          <Users className="h-6 w-6" />
+                        </div>
+                        <div>
+                          <p className="font-semibold">{group.name}</p>
+                          <p className="text-gray-500">
+                            {group.memberCount} members
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
                 ))}
               </div>
             )}
           </div>
         </div>
       </div>
+
+      <CreateGroupModal
+        isOpen={isCreateGroupModal}
+        onClose={() => setisCreateGroupModal(false)}
+        onSuccess={(groupId: any) => router.push(`/groups/${groupId}`)}
+      />
     </div>
   );
 };
