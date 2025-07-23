@@ -20,8 +20,8 @@ export function Header() {
 
   return (
     <div>
-      <header className="fixed top-0 border-b bg-white/85 backdrop-blur-md w-full z-50 ">
-        <nav className="flex items-center justify-between mx-auto px-5">
+      <header className="fixed top-0 border-b bg-white/85 backdrop-blur-md w-full z-50">
+        <nav className="flex items-center justify-between mx-auto px-15">
           <a href="/">
             <img
               src={"/logos/logo.png"}
@@ -51,9 +51,7 @@ export function Header() {
           <div className="flex items-center gap-4">
             <Authenticated>
               <a href="/dashboard">
-                <Button
-                  variant={"outline"}
-                >
+                <Button variant={"outline"}>
                   <LayoutDashboard />
                   Dashboard
                 </Button>

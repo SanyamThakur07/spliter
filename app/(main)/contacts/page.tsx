@@ -9,7 +9,7 @@ import { Link, Plus, User, Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useRouter } from "next/navigation";
-import CreateGroupModal from "./_component/create-group-modal";
+import CreateGroupModal from "./_components/create-group-modal";
 
 const ContactsPage = () => {
   const [isCreateGroupModal, setisCreateGroupModal] = useState(false);

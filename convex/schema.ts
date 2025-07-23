@@ -33,7 +33,7 @@ export default defineSchema({
     })
         .index("by_group", ["groupId"])
         .index("by_user_and_group", ["paidByUserId", "groupId"])
-        .index("by_data", ["date"]),
+        .index("by_date", ["date"]),
 
     settlements: defineTable({
         amount: v.number(),

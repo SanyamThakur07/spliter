@@ -14,6 +14,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as contacts from "../contacts.js";
+import type * as dashboard from "../dashboard.js";
 import type * as seed from "../seed.js";
 import type * as user from "../user.js";
 
@@ -27,6 +28,7 @@ import type * as user from "../user.js";
  */
 declare const fullApi: ApiFromModules<{
   contacts: typeof contacts;
+  dashboard: typeof dashboard;
   seed: typeof seed;
   user: typeof user;
 }>;

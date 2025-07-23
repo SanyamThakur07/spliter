@@ -1,9 +1,163 @@
-import React from 'react'
+"use client";
+
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { api } from "@/convex/_generated/api";
+import { useConvexQuery } from "@/hooks/use-convex-query";
+import { Link, PlusCircle } from "lucide-react";
+import React from "react";
+import { BarLoader } from "react-spinners";
+
+type Balance = {
+  youOwe: number;
+  youAreOwed: number;
+  totalBalance: number;
+  oweDetails: {
+    youOwe: Array<any>;
+    youAreOwedBy: Array<any>;
+  };
+};
 
 const DashboardPage = () => {
-  return (
-    <div>DashboardPage</div>
-  )
-}
+  const { data: balances, isLoading: balancesLoading } = useConvexQuery(
+    api.dashboard.getUserBalances,
+  );
+  const { data: groups, isLoading: groupsLoading } = useConvexQuery(
+    api.dashboard.getUserGroups,
+  );
+  const { data: totalSpent, isLoading: totolSpentLoading } = useConvexQuery(
+    api.dashboard.getTotalSpend,
+  );
+  const { data: monthlySpending, isLoading: monthlySpendingLoading } =
+    useConvexQuery(api.dashboard.getMonthlySpending);
 
-export default DashboardPage
+  const isLoading =
+    balancesLoading ||
+    groupsLoading ||
+    totolSpentLoading ||
+    monthlySpendingLoading;
+
+  return (
+    <div>
+      {isLoading ? (
+        <div>
+          <BarLoader width={"100%"} color="#36d7b7" />
+        </div>
+      ) : (
+        <div className="container mx-auto py-6">
+          <div className="flex items-center justify-between gap-6 pt-10 mb-4">
+            <h1 className="gradient-title font-bold text-5xl"> Dashboard </h1>
+            <Button asChild>
+              <a href="/expenses/new">
+                <PlusCircle className="mr-1" /> Add Expense
+              </a>
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-3 gap-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-md font-medium text-gray-500">
+                  Total Balance
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="font-bold text-2xl">
+                  {balances ? (
+                    (balances as Balance).totalBalance > 0 ? (
+                      <span className="text-green-600">
+                        +$
+                        {(balances as Balance).totalBalance.toFixed(2)}
+                      </span>
+                    ) : (balances as Balance).totalBalance < 0 ? (
+                      <span className="text-red-600">
+                        -$
+                        {(balances as Balance).totalBalance.toFixed(2)}
+                      </span>
+                    ) : (
+                      <span>$0.00</span>
+                    )
+                  ) : null}
+                </div>
+                <p className="text-sm text-gray-500">
+                  {balances
+                    ? (balances as Balance).totalBalance > 0
+                      ? "You are owed money"
+                      : (balances as Balance).totalBalance < 0
+                        ? "You owe money"
+                        : "All settled up!"
+                    : null}
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-md font-medium text-gray-500">
+                  You are owed
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="font-bold text-2xl text-green-600">
+                  {balances
+                    ? `$${(balances as Balance).youAreOwed.toFixed(2)}`
+                    : "$0.00"}
+                </div>
+                <p className="text-sm text-gray-500">
+                  {balances
+                    ? `From ${(balances as Balance).oweDetails.youAreOwedBy.length || 0} people`
+                    : "From 0 people"}
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-md font-medium text-gray-500">
+                  You owe
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {balances ? (
+                  (balances as Balance).oweDetails.youOwe.length > 0 ? (
+                    <div>
+                      <div className="text-2xl font-bold text-red-600">
+                        ${(balances as Balance).youOwe.toFixed(2)}
+                      </div>
+                      <p className="text-gray-500 text-sm">
+                        To {(balances as Balance).oweDetails.youOwe.length}{" "}
+                        People
+                      </p>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="text-2xl font-bold"> $0.00 </div>
+                      <p className="text-sm text-gray-500">
+                        You don't owe anyone
+                      </p>
+                    </div>
+                  )
+                ) : (
+                  <div>
+                    <div className="text-2xl font-bold"> $0.00 </div>
+                    <p className="text-sm text-gray-500">
+                      You don't owe anyone
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default DashboardPage;
