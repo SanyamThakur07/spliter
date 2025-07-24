@@ -12,9 +12,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { useConvexQuery } from "@/hooks/use-convex-query";
-import { Link, PlusCircle } from "lucide-react";
+import { ChevronRight, PlusCircle, Users } from "lucide-react";
 import React from "react";
 import { BarLoader } from "react-spinners";
+import ExpenseSummary from "./_components/expense-summary";
+import Link from "next/link";
+import BalanceSummary from "./_components/balance-summary";
+import GroupList from "./_components/group-list";
 
 type Balance = {
   youOwe: number;
@@ -56,13 +60,13 @@ const DashboardPage = () => {
           <div className="flex items-center justify-between gap-6 pt-10 mb-4">
             <h1 className="gradient-title font-bold text-5xl"> Dashboard </h1>
             <Button asChild>
-              <a href="/expenses/new">
+              <Link href="/expenses/new">
                 <PlusCircle className="mr-1" /> Add Expense
-              </a>
+              </Link>
             </Button>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-4 mb-4">
             <Card>
               <CardHeader>
                 <CardTitle className="text-md font-medium text-gray-500">
@@ -79,8 +83,7 @@ const DashboardPage = () => {
                       </span>
                     ) : (balances as Balance).totalBalance < 0 ? (
                       <span className="text-red-600">
-                        -$
-                        {(balances as Balance).totalBalance.toFixed(2)}
+                        ${(balances as Balance).totalBalance.toFixed(2)}
                       </span>
                     ) : (
                       <span>$0.00</span>
@@ -153,6 +156,68 @@ const DashboardPage = () => {
                 )}
               </CardContent>
             </Card>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div className="col-span-2">
+              <ExpenseSummary
+                monthlySpending={monthlySpending ?? []}
+                totalSpent={totalSpent ?? 0}
+              />
+            </div>
+            <div className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg font-semibold">
+                      Balance Details
+                    </CardTitle>
+                    <Button
+                      asChild
+                      variant={"link"}
+                      className="font-bold text-gray-500"
+                    >
+                      <Link href={"/contacts"}>
+                        View all
+                        <ChevronRight />
+                      </Link>
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <BalanceSummary balances={balances} />
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg font-semibold">
+                      Your Groups
+                    </CardTitle>
+                    <Button
+                      asChild
+                      variant={"link"}
+                      className="font-bold text-gray-500"
+                    >
+                      <Link href={"/contacts"}>
+                        View all
+                        <ChevronRight />
+                      </Link>
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <GroupList groups={groups ?? []} />
+                </CardContent>
+                <CardFooter>
+                  <Button asChild variant={"outline"} className="w-full">
+                    <Link href={"/contacts?createGroup=true"}>
+                      <Users className="h-4 w-4 mr-2" />
+                      Create new group
+                    </Link>
+                  </Button>
+                </CardFooter>
+              </Card>
+            </div>
           </div>
         </div>
       )}

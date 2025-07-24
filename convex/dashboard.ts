@@ -93,9 +93,9 @@ export const getTotalSpend = query({
         let totalSpent = 0;
 
         userExpenses.forEach((expense) => {
-            const userSplit = expense.splits.find((split) => {
-                split.userId === user._id;
-            });
+            const userSplit = expense.splits.find(
+                (split) => split.userId === user._id
+            );
             if (userSplit) {
                 totalSpent += userSplit.amount;
             }
@@ -211,7 +211,7 @@ export const getUserGroups = query({
                     }
                 });
                 return {
-                    ...groups,
+                    ...group,
                     id: group._id,
                     balance,
                 };

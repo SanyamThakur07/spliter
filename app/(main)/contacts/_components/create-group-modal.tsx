@@ -48,7 +48,7 @@ const groupSchema = z.object({
   description: z.optional(z.string()),
 });
 
-const CreateGroupModal = ({ isOpen, onClose }) => {
+const CreateGroupModal = ({ isOpen, onClose, onSuccess }) => {
   const [selectedMembers, setselectedMembers] = useState<User[]>([]);
   const [searchQuery, setsearchQuery] = useState("");
   const [commandOpen, setcommandOpen] = useState(false);

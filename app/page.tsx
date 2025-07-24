@@ -44,12 +44,12 @@ export default function Home() {
 
           <div className="mx-auto pt-20">
             <Image
-              src={"/hero1.png"}
+              src="/new-hero.png"
               alt="Banner"
-              width={1200}
+              width={1000}
               height={500}
-              className="rounded-lg border-4 border-green-700 shadow-xl"
-            ></Image>
+              className="[mask-image:linear-gradient(to_bottom,_rgba(0,0,0,1)_60%,_rgba(0,0,0,0)_100%)]"
+            />
           </div>
         </div>
       </section>

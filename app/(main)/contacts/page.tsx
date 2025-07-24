@@ -3,19 +3,31 @@
 import { api } from "@/convex/_generated/api";
 import { useConvexQuery } from "@/hooks/use-convex-query";
 import { BarLoader } from "react-spinners";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Link, Plus, User, Users } from "lucide-react";
+import { Plus, User, Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import CreateGroupModal from "./_components/create-group-modal";
+import Link from "next/link";
 
 const ContactsPage = () => {
   const [isCreateGroupModal, setisCreateGroupModal] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const { data, isLoading } = useConvexQuery(api.contacts.getAllContacts);
 
-  const router = useRouter();
+  useEffect(() => {
+    const createGroupParams = searchParams.get("createGroup");
+    if (createGroupParams === "true") {
+      setisCreateGroupModal(true);
+      const url = new URL(window.location.href);
+      url.searchParams.delete("createGroup");
+      router.replace(url.pathname + url.search);
+    }
+  }, [searchParams, router]);
 
   if (isLoading) {
     return (
@@ -85,9 +97,9 @@ const ContactsPage = () => {
                 </CardContent>
               </Card>
             ) : (
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 {groups.map((group: any) => (
-                  <div key={group.id}>
+                  <Link key={group.id} href={`/groups/${group.id}`}>
                     <Card className="py-8">
                       <CardContent className="flex items-center gap-4">
                         <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-200">
@@ -101,7 +113,7 @@ const ContactsPage = () => {
                         </div>
                       </CardContent>
                     </Card>
-                  </div>
+                  </Link>
                 ))}
               </div>
             )}
