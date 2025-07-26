@@ -129,7 +129,7 @@ const ExpenseList = ({
                       onClick={() => handleDeleteExpense(expense)}
                       className="rounded-full hover:text-red-700 hover:bg-red-100"
                     >
-                      <Trash2 />
+                      <Trash2 className="h-2 w-2 ml-1" />
                     </Button>
                   )}
                 </div>

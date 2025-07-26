@@ -2,8 +2,25 @@ import { internal } from "./_generated/api"
 import { Id } from "./_generated/dataModel";
 import { query } from "./_generated/server"
 
+type UserBalance = {
+    userId: string;
+    name?: string;
+    imageUrl?: string;
+    amount: number;
+};
+
+type GetUserBalancesReturn = {
+    youOwe: number;
+    youAreOwed: number;
+    totalBalance: number;
+    oweDetails: {
+        youOwe: UserBalance[];
+        youAreOwedBy: UserBalance[];
+    };
+};
+
 export const getUserBalances = query({
-    handler: async (ctx) => {
+    handler: async (ctx): Promise<GetUserBalancesReturn> => {
         const user = await ctx.runQuery((internal as any).user.getCurrentUser);
 
         const expenses = (await ctx.db.query("expenses").collect())
@@ -52,6 +69,9 @@ export const getUserBalances = query({
         const youAreOwedByList = [];
 
         for (const [uid, { owed, owing }] of Object.entries(balanceByUser)) {
+
+            if (uid === user._id) continue;
+
             const net = owed - owing;
             if (net == 0) continue;
 
