@@ -37,7 +37,7 @@ const ContactsPage = () => {
     );
   }
 
-  const { users, groups } = data || { user: [], groups: [] };
+  const { users, groups } = data || { users: [], groups: [] };
   return (
     <div className="container mx-auto py-6">
       <div className="flex items-center justify-between px-7 pt-10">
@@ -60,9 +60,9 @@ const ContactsPage = () => {
               </CardContent>
             </Card>
           ) : (
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
               {users.map((user: any) => (
-                <div key={user.id}>
+                <Link href={`/person/${user.id}`} key={user.id}>
                   <Card className="py-8">
                     <CardContent className="flex items-center gap-4">
                       <Avatar>
@@ -78,7 +78,7 @@ const ContactsPage = () => {
                       </div>
                     </CardContent>
                   </Card>
-                </div>
+                </Link>
               ))}
             </div>
           )}
