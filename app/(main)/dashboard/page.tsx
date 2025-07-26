@@ -57,7 +57,7 @@ const DashboardPage = () => {
         </div>
       ) : (
         <div className="container mx-auto py-6">
-          <div className="flex items-center justify-between gap-6 pt-10 mb-4">
+          <div className="flex items-center justify-between gap-6 pt-5 mb-4">
             <h1 className="gradient-title font-bold text-5xl"> Dashboard </h1>
             <Button asChild>
               <Link href="/expenses/new">
@@ -184,7 +184,9 @@ const DashboardPage = () => {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <BalanceSummary balances={balances} />
+                  {balances && (
+                    <BalanceSummary balances={balances as Balance} />
+                  )}
                 </CardContent>
               </Card>
               <Card>
