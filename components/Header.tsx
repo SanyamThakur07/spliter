@@ -35,13 +35,13 @@ export function Header() {
           {path === "/" && (
             <div className="flex items-center gap-6">
               <a
-                href="#Feaures"
+                href="#features"
                 className="text-md font-medium hover:text-green-700 transition"
               >
                 Features
               </a>
               <a
-                href="#How it Works"
+                href="#how-it-works"
                 className="text-md font-medium hover:text-green-700 transition"
               >
                 How is Works

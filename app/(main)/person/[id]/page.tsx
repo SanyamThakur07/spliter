@@ -20,6 +20,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import ExpenseList from "@/components/expense-list";
+import { SettlementsList } from "@/components/settlement-list";
 
 type ExpenseData = {
   expenses: any[];
@@ -126,22 +127,26 @@ const PersonExpensePage = () => {
             Settlements ({settlements.length})
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="account">
-          Make changes to your account here.
+        <TabsContent value="expenses" className="space-y-4 mt-2">
+          <ExpenseList
+            expenses={expenses}
+            showOtherPerson={true}
+            isGroupExpense={false}
+            otherPersonId={params.id as Id<"users">}
+            userLookUpMap={
+              otherUser ? { [otherUser.id.toString()]: otherUser } : {}
+            }
+          />
         </TabsContent>
-        <TabsContent value="password">Change your password here.</TabsContent>
+        <TabsContent value="settlements" className="space-y-4 mt-2">
+          <SettlementsList
+            settlements={settlements}
+            userLookUpMap={
+              otherUser ? { [otherUser.id.toString()]: otherUser } : {}
+            }
+          />
+        </TabsContent>
       </Tabs>
-      <div className="mt-5">
-        <ExpenseList
-          expenses={expenses}
-          showOtherPerson={true}
-          isGroupExpense={false}
-          otherPersonId={params.id as Id<"users">}
-          userLookUpMap={
-            otherUser ? { [otherUser.id.toString()]: otherUser } : {}
-          }
-        />
-      </div>
     </div>
   );
 };

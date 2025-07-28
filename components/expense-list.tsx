@@ -18,6 +18,23 @@ import { Button } from "./ui/button";
 import { Trash2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
+type Split = {
+  userId: Id<"users">;
+  amount: number;
+  paid: boolean;
+};
+
+type Expense = {
+  _id: Id<"expenses">;
+  description: string;
+  amount: number;
+  date: number;
+  paidByUserId: Id<"users">;
+  createdBy: Id<"users">;
+  category: string;
+  splits: Split[];
+};
+
 type User = {
   _id: Id<"users">;
   name: string;
@@ -26,7 +43,7 @@ type User = {
 };
 
 type ExpenseListProps = {
-  expenses: any[];
+  expenses: Expense[];
   showOtherPerson?: boolean;
   isGroupExpense?: boolean;
   otherPersonId?: Id<"users"> | null;
@@ -59,7 +76,7 @@ const ExpenseList = ({
     };
   };
 
-  const canDeleteExpense = (expense: any) => {
+  const canDeleteExpense = (expense: Expense) => {
     if (!currentUser) return false;
 
     return (
@@ -68,7 +85,7 @@ const ExpenseList = ({
     );
   };
 
-  const handleDeleteExpense = async (expense: any) => {
+  const handleDeleteExpense = async (expense: Expense) => {
     try {
       await deleteExpense.mutate({ expenseId: expense._id });
       return { success: true };
@@ -116,9 +133,14 @@ const ExpenseList = ({
                     ) : (
                       <div className="text-sm text-gray-500">
                         {isCurrentUserPayer ? (
-                          <span> You paid</span>
+                          <span className="text-green-500 font-medium">
+                            {" "}
+                            You paid
+                          </span>
                         ) : (
-                          <span>{payer.name} paid</span>
+                          <span className="text-red-600 font-medium">
+                            {payer.name} paid
+                          </span>
                         )}
                       </div>
                     )}
@@ -127,16 +149,16 @@ const ExpenseList = ({
                     <Button
                       variant={"ghost"}
                       onClick={() => handleDeleteExpense(expense)}
-                      className="rounded-full hover:text-red-700 hover:bg-red-100"
+                      className="rounded-full hover:text-red-700 hover:bg-red-100 ml-1"
                     >
-                      <Trash2 className="h-2 w-2 ml-1" />
+                      <Trash2 className="h-2 w-2" />
                     </Button>
                   )}
                 </div>
               </div>
               <div className="mt-2">
                 <div className="flex flex-wrap gap-2">
-                  {expense.splits.map((split: any, idx: any) => {
+                  {expense.splits.map((split, idx) => {
                     const splitUser = getUserDetail(split.userId);
                     const isCurrentUser = split.userId === currentUser?._id;
 
@@ -154,7 +176,6 @@ const ExpenseList = ({
                         variant={split.paid ? "outline" : "secondary"}
                       >
                         <Avatar className="h-6 w-6">
-                          <AvatarImage src={splitUser.imageUrl || ""} />
                           <AvatarFallback>
                             {splitUser.name.charAt(0)}
                           </AvatarFallback>

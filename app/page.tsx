@@ -37,9 +37,11 @@ export default function Home() {
                 <ArrowRight className="ml-2" />
               </a>
             </Button>
-            <Button variant={"outline"} className="px-4">
-              <a href="#how-it-works"></a>See How It Works
-            </Button>
+            <a href="#how-it-works">
+              <Button variant={"outline"} className="px-4">
+                See How It Works
+              </Button>
+            </a>
           </div>
 
           <div className="mx-auto pt-20">
@@ -53,7 +55,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="p-10">
+      <section id="#features" className="p-10">
         <div className="mx-auto flex flex-col items-center justify-center space-y-4 pt-10 text-center">
           <Badge
             variant="outline"
@@ -87,7 +89,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="p-10">
+      <section id="#how-it-works" className="p-10">
         <div className="mx-auto flex flex-col items-center justify-center space-y-4 pt-10 text-center">
           <Badge
             variant="outline"
