@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Spliter
 
-## Getting Started
+Spliter is a full-stack web application designed to help users track shared expenses and settle balances within groups. It simplifies the process of managing finances with friends, family, or roommates, making it easy to see who owes what.
 
-First, run the development server:
+## ✨ Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **User Authentication:** Secure sign-up and sign-in functionality using Clerk.
+- **Group Management:** Create, join, and manage groups of users.
+- **Expense Tracking:** Add new expenses, specifying the amount and participants.
+- **Dashboard:** View a summary of your total balance, expenses, and group activities.
+- **Balance Settlement:** Track and manage settlements between group members.
+- **Responsive Design:** A clean and modern UI that works on both desktop and mobile devices.
+
+## 🛠️ Tech Stack
+
+- **Framework:** [Next.js](https://nextjs.org/)
+- **Backend & Database:** [Convex](https://www.convex.dev/)
+- **Authentication:** [Clerk](https://clerk.com/)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **UI Components:** [Shadcn/ui](https://ui.shadcn.com/)
+- **Form Management:** [React Hook Form](https://react-hook-form.com/)
+- **Schema Validation:** [Zod](https://zod.dev/)
+- **Deployment:** [Vercel](https://vercel.com/)
+
+## 🚀 Getting Started
+
+Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/en/) (v20 or later)
+- [pnpm](https://pnpm.io/installation)
+
+### Installation & Setup
+
+1.  **Clone the repository:**
+
+    ```bash
+    git clone https://github.com/your-username/spliter.git
+    cd spliter
+    ```
+
+2.  **Install dependencies:**
+
+    ```bash
+    pnpm install
+    ```
+
+3.  **Set up Convex:**
+
+    - Start the Convex development server:
+      ```bash
+      npx convex dev
+      ```
+    - Follow the on-screen instructions to create a new Convex project.
+    - Seed the database with initial data:
+      ```bash
+      npx convex run seed
+      ```
+
+4.  **Set up Clerk:**
+
+    - Create a new project on the [Clerk Dashboard](https://dashboard.clerk.com/).
+    - In your Clerk project settings, navigate to **JWT Templates** and create a new template using the "Convex" option.
+    - Note down your Issuer URL from the template settings.
+
+5.  **Environment Variables:**
+
+    - Create a `.env.local` file in the root of the project.
+    - Add the following environment variables from your Convex and Clerk projects:
+
+      ```env
+      # Convex
+      NEXT_PUBLIC_CONVEX_URL="<your-convex-project-url>"
+
+      # Clerk
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="<your-clerk-publishable-key>"
+      CLERK_SECRET_KEY="<your-clerk-secret-key>"
+      NEXT_PUBLIC_CLERK_SIGN_IN_URL="/sign-in"
+      NEXT_PUBLIC_CLERK_SIGN_UP_URL="/sign-up"
+      NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL="/"
+      NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL="/"
+      ```
+
+6.  **Run the development server:**
+    ```bash
+    pnpm dev
+    ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
