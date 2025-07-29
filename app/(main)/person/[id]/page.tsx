@@ -141,6 +141,7 @@ const PersonExpensePage = () => {
         <TabsContent value="settlements" className="space-y-4 mt-2">
           <SettlementsList
             settlements={settlements}
+            isGroupSettlement={false}
             userLookUpMap={
               otherUser ? { [otherUser.id.toString()]: otherUser } : {}
             }

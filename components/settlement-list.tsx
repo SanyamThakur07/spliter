@@ -16,7 +16,7 @@ type User = {
 type SettlmentListProps = {
   settlements: any[];
   isGroupSettlement: boolean;
-  userLookUpMap: Record<
+  userLookUpMap?: Record<
     string,
     { name: string; imageUrl: string; id: Id<"users"> }
   >;
