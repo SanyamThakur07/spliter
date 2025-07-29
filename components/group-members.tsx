@@ -2,7 +2,6 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useConvexQuery } from "@/hooks/use-convex-query";
 import React from "react";
-import { moveMessagePortToContext } from "worker_threads";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 
@@ -40,7 +39,7 @@ const GroupMembers = ({ members }: GroupMemberProps) => {
         const isAdmin = member.role === "admin";
 
         return (
-          <div className="relative flex items-center gap-3">
+          <div key={member.id} className="relative flex items-center gap-3">
             <Avatar>
               <AvatarImage src={member.imageUrl} />
               <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
