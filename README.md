@@ -11,6 +11,12 @@ Spliter is a full-stack web application designed to help users track shared expe
 - **Balance Settlement:** Track and manage settlements between group members.
 - **Responsive Design:** A clean and modern UI that works on both desktop and mobile devices.
 
+## 📊 Dashboard Screenshot
+
+Here's a screenshot of the dashboard:
+
+![Dashboard](public/dashboard.png)
+
 ## 🛠️ Tech Stack
 
 - **Framework:** [Next.js](https://nextjs.org/)
