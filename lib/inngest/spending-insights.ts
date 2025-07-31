@@ -55,8 +55,7 @@ Provide your analysis in these sections:
                     return await model.generateContent(prompt);
                 });
 
-                const htmlBody =
-                    aiResponse?.response?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+                const htmlBody = (aiResponse?.response?.candidates?.[0]?.content?.parts?.[0] as { text: string })?.text ?? "";
 
                 await step.run(`Email · ${user._id}`, async () =>
                     convex.action(api.email.sendEmail, {
@@ -68,7 +67,7 @@ Provide your analysis in these sections:
                   <p>Here's your personalized spending analysis for the past month:</p>
                   ${htmlBody}
                 `,
-                        apiKey: process.env.RESEND_API_KEY,
+                        apiKey: process.env.RESEND_API_KEY!,
                     })
                 );
 
