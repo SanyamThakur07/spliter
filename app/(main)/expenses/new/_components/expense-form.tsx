@@ -49,7 +49,7 @@ const expenseSchema = z.object({
 });
 
 type User = {
-  id: Id<"users">;
+  id: string;
   name: string;
   email: string;
   imageUrl: string;
@@ -62,6 +62,7 @@ type Group = {
 type Splits = {
   userId: string;
   amount: number;
+  paid?: boolean;
 };
 type ExpenseFormProps = {
   type: "individual" | "group";
@@ -126,10 +127,16 @@ const ExpenseForm = ({ type = "individual", onSuccess }: ExpenseFormProps) => {
     try {
       const amount = parseFloat(data.amount);
 
+      // Validate that we have splits
+      if (splits.length === 0) {
+        toast.error("Please wait for the splits to be calculated.");
+        return;
+      }
+
       const formattedSplits = splits.map((split) => ({
         userId: split.userId,
         amount: split.amount,
-        paid: split.userId === data.paidByUserId,
+        paid: split.userId === data.paidByUserId, // Set paid to true for the person who paid
       }));
 
       const totalSplitAmount = formattedSplits.reduce(
@@ -153,7 +160,7 @@ const ExpenseForm = ({ type = "individual", onSuccess }: ExpenseFormProps) => {
         category: data.category || "Other",
         date: data.date.getTime(),
         paidByUserId: data.paidByUserId,
-        splitsType: data.splitsType,
+        splitType: data.splitType,
         splits: formattedSplits,
         groupId,
       });
@@ -339,6 +346,11 @@ const ExpenseForm = ({ type = "individual", onSuccess }: ExpenseFormProps) => {
             />
           </TabsContent>
         </Tabs>
+        <div className="justiyfy-end text-right mt-4">
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Creating..." : "Create Expense"}
+          </Button>
+        </div>
       </div>
     </form>
   );

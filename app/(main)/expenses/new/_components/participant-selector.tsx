@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/command";
 
 type User = {
-  id: Id<"users">;
+  id: string;
   name: string;
   email: string;
   imageUrl: string;

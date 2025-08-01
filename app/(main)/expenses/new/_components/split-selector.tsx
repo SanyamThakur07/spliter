@@ -3,13 +3,10 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
-import { useConvexQuery } from "@/hooks/use-convex-query";
 import React, { useEffect, useState } from "react";
 
 type User = {
-  id: Id<"users">;
+  id: string;
   name: string;
   email: string;
   imageUrl: string;
@@ -30,7 +27,7 @@ type SplitSelectorProps = {
   amount: number;
   paidByUserId: string;
   participants: User[];
-  onSplitChange: (split: Split[]) => void;
+  onSplitChange: (split: { userId: string; amount: number }[]) => void;
 };
 
 const SplitSelector = ({
@@ -40,74 +37,43 @@ const SplitSelector = ({
   participants,
   onSplitChange,
 }: SplitSelectorProps) => {
-  const { data: user } = useConvexQuery(api.user.getCurrentUser);
-
   const [splits, setSplits] = useState<Split[]>([]);
-  const [totalPercentage, setTotalPercentage] = useState<number>(0);
-  const [totalAmount, setTotalAmount] = useState<number>(0);
 
   useEffect(() => {
     if (!amount || amount <= 0 || participants.length === 0) {
+      setSplits([]);
+      if (onSplitChange) {
+        onSplitChange([]);
+      }
       return;
     }
 
-    let newSplits: Split[] = [];
+    const totalCents = Math.round(amount * 100);
+    const shareCents = Math.floor(totalCents / participants.length);
+    const remainderCents = totalCents - shareCents * participants.length;
 
-    if (type === "equal") {
-      const shareAmount = amount / participants.length;
-      newSplits = participants.map((participant) => ({
+    const newSplits = participants.map((participant, index) => {
+      const cents = shareCents + (index < remainderCents ? 1 : 0);
+      const splitAmount = cents / 100;
+      return {
         userId: participant.id,
         name: participant.name,
         email: participant.email,
         imageUrl: participant.imageUrl,
-        amount: parseFloat(shareAmount.toFixed(2)),
-        percentage: parseFloat((100 / participants.length).toFixed(2)),
+        amount: splitAmount,
+        percentage: amount > 0 ? (splitAmount / amount) * 100 : 0,
         paid: participant.id === paidByUserId,
-      }));
-    } else if (type === "percentage") {
-      const shareAmount = amount / 100;
-      newSplits = participants.map((participant) => ({
-        userId: participant.id,
-        name: participant.name,
-        email: participant.email,
-        imageUrl: participant.imageUrl,
-        amount: parseFloat(shareAmount.toFixed(2)),
-        percentage: parseFloat((100 / participants.length).toFixed(2)),
-        paid: participant.id === paidByUserId,
-      }));
-    } else if (type === "exact") {
-      const evenAmount = amount / participants.length;
-      newSplits = participants.map((participant) => ({
-        userId: participant.id,
-        name: participant.name,
-        email: participant.email,
-        imageUrl: participant.imageUrl,
-        amount: parseFloat(evenAmount.toFixed(2)),
-        percentage: parseFloat(((evenAmount / amount) * 100).toFixed(2)),
-        paid: participant.id === paidByUserId,
-      }));
-    }
+      };
+    });
 
     setSplits(newSplits);
-
-    const newTotalAmount = newSplits.reduce(
-      (sum, split) => sum + split.amount,
-      0,
-    );
-    const newTotalPercentage = newSplits.reduce(
-      (sum, split) => sum + split.percentage,
-      0,
-    );
-
-    setTotalAmount(newTotalAmount);
-    setTotalPercentage(newTotalPercentage);
 
     if (onSplitChange) {
       onSplitChange(newSplits);
     }
   }, [type, amount, participants, paidByUserId, onSplitChange]);
 
-  const updatePercentageSplit = (userId, newPercentage) => {
+  const updatePercentageSplit = (userId: string, newPercentage: number) => {
     const updatedSplits = splits.map((split) => {
       if (split.userId === userId) {
         return {
@@ -119,55 +85,40 @@ const SplitSelector = ({
       return split;
     });
     setSplits(updatedSplits);
-    const newTotalAmount = updatedSplits.reduce(
-      (sum, split) => sum + split.amount,
-      0,
-    );
-    const newTotalPercentage = updatedSplits.reduce(
-      (sum, split) => sum + split.percentage,
-      0,
-    );
-
-    setTotalAmount(newTotalAmount);
-    setTotalPercentage(newTotalPercentage);
-
     if (onSplitChange) {
       onSplitChange(updatedSplits);
     }
   };
 
-  const updateExactSplit = (userId, newAmount) => {
+  const updateExactSplit = (userId: string, newAmount: string) => {
     const parsedAmount = parseFloat(newAmount);
+    const finalAmount = isNaN(parsedAmount) ? 0 : parsedAmount;
+
     const updatedSplits = splits.map((split) => {
       if (split.userId === userId) {
         return {
           ...split,
-          amount: newAmount,
-          percentage: (newAmount / amount) * 100,
+          amount: finalAmount,
+          percentage: amount > 0 ? (finalAmount / amount) * 100 : 0,
         };
       }
       return split;
     });
     setSplits(updatedSplits);
-    const newTotalAmount = updatedSplits.reduce(
-      (sum, split) => sum + split.amount,
-      0,
-    );
-    const newTotalPercentage = updatedSplits.reduce(
-      (sum, split) => sum + split.percentage,
-      0,
-    );
-
-    setTotalAmount(newTotalAmount);
-    setTotalPercentage(newTotalPercentage);
-
     if (onSplitChange) {
       onSplitChange(updatedSplits);
     }
   };
 
+  const totalAmount = splits.reduce((sum, split) => sum + split.amount, 0);
+  const totalPercentage = splits.reduce(
+    (sum, split) => sum + split.percentage,
+    0,
+  );
+
   const isPercentageValid = Math.abs(totalPercentage - 100) < 0.01;
   const isAmountValid = Math.abs(totalAmount - amount) < 0.01;
+
   return (
     <div>
       {splits.map((split) => (
